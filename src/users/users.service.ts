@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -17,9 +21,8 @@ export class UsersService {
   async signup(userSignUpDto: UserSignUpDto): Promise<UserEntity> {
     const userExists = await this.findUserByEmail(userSignUpDto.email);
 
-    if (userExists) {
+    if (userExists)
       throw new BadRequestException('User with this email already exists');
-    }
 
     userSignUpDto.password = await this.hashPassword(userSignUpDto.password);
     let user = this.usersRepository.create(userSignUpDto);
@@ -37,9 +40,7 @@ export class UsersService {
       .where('user.email = :email', { email: userSignInDto.email })
       .getOne();
 
-    if (!userExists) {
-      throw new BadRequestException('Bad credentials');
-    }
+    if (!userExists) throw new BadRequestException('Bad credentials');
 
     const matchPassword = await this.comparePassword(
       userSignInDto.password,
@@ -79,5 +80,16 @@ export class UsersService {
   }
   async findUserByEmail(email: string) {
     return await this.usersRepository.findOneBy({ email });
+  }
+
+  async findAll(): Promise<UserEntity[]> {
+    return await this.usersRepository.find();
+  }
+
+  async findOne(id: number): Promise<UserEntity> {
+    const user = await this.usersRepository.findOneBy({ id });
+    if (!user) throw new NotFoundException('User not found');
+
+    return user;
   }
 }
