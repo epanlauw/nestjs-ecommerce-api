@@ -25,16 +25,23 @@ export class CurrentUserMiddleware implements NestMiddleware {
       !authHeader.startsWith('Bearer ')
     ) {
       req.currentUser = null;
+      next();
+      return;
     } else {
-      const token = authHeader.split(' ')[1];
-      const { id } = <JwtPayload>(
-        verify(token, process.env.JWT_SECRET as string)
-      );
-      const currentUser = await this.userService.findOne(+id);
-
-      req.currentUser = currentUser;
+      try {
+        const token = authHeader.split(' ')[1];
+        const { id } = <JwtPayload>(
+          verify(token, process.env.JWT_SECRET as string)
+        );
+        const currentUser = await this.userService.findOne(+id);
+        req.currentUser = currentUser;
+        next();
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (err) {
+        req.currentUser = null;
+        next();
+      }
     }
-    next();
   }
 }
 
