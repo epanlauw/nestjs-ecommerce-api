@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 import { UserSignUpDto } from './dto/user-signup.dto';
 import { hash, compare } from 'bcrypt';
 import { UserSignInDto } from './dto/user-signin.dto';
-import { sign } from 'jsonwebtoken';
+import { sign, SignOptions } from 'jsonwebtoken';
 
 @Injectable()
 export class UsersService {
@@ -57,11 +57,16 @@ export class UsersService {
     if (!process.env.JWT_SECRET) {
       throw new Error('JWT_SECRET is not defined');
     }
-    return sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRATION
-        ? parseInt(process.env.JWT_EXPIRATION, 10)
-        : undefined,
-    });
+
+    const options: SignOptions = {
+      expiresIn: '100d',
+    };
+
+    return sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      options,
+    );
   }
 
   private async hashPassword(password: string) {
