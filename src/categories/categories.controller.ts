@@ -32,12 +32,12 @@ export class CategoriesController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(): Promise<CategoryEntity[]> {
     return await this.categoriesService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<CategoryEntity> {
     return await this.categoriesService.findOne(+id);
   }
 

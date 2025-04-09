@@ -22,18 +22,22 @@ export class CategoriesService {
     return this.categoryRepository.save(category);
   }
 
-  async findAll() {
+  async findAll(): Promise<CategoryEntity[]> {
     return await this.categoryRepository.find();
   }
 
-  async findOne(id: number) {
-    return await this.categoryRepository.findOne({
+  async findOne(id: number): Promise<CategoryEntity> {
+    const category = await this.categoryRepository.findOne({
       where: { id },
       relations: { addedBy: true },
       select: {
         addedBy: { id: true, name: true },
       },
     });
+
+    if (!category) throw new NotFoundException('category not found');
+
+    return category;
   }
 
   async update(id: number, fields: Partial<UpdateCategoryDto>) {
