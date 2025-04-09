@@ -21,9 +21,44 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+# NestJS E-Commerce API
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+A RESTful API for an e-commerce platform built with NestJS, TypeORM, and PostgreSQL.
+
+## Features
+
+- User authentication and authorization
+- Role-based access control (Admin/User)
+- Product management
+- Category management
+- JWT-based authentication
+- Database migrations
+- Input validation
+
+## Tech Stack
+
+- NestJS
+- TypeORM
+- PostgreSQL
+- TypeScript
+- JWT for authentication
+- Class Validator
+- Bcrypt for password hashing
+
+## Prerequisites
+
+- Node.js
+- PostgreSQL
+- Yarn/npm
+
+## Installation
+
+1. Clone the repository
+2. Install dependencies:
+
+```bash
+yarn install
+```
 
 ## Project setup
 
